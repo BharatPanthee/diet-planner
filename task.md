@@ -1,0 +1,29 @@
+# Diet Planner Development Tasks
+
+- [x] **Initialize Project Architecture**
+  - [x] Create `index.html` structure
+  - [x] Create `style.css` stylesheet
+  - [x] Create `gemini-service.js` module
+  - [x] Create `app.js` module
+  - [x] Create `README.md` instructions
+- [x] **Design Glassmorphism UI & Forms**
+  - [x] Build collapsible API key input card
+  - [x] Create weekly planning input form with units selectors
+  - [x] Design cards layout for the 5 generated strategies
+  - [x] Layout the 7-day daily meal grid and department grocery checklist
+  - [x] Add loading state skeleton card animations
+  - [x] Add print-friendly media queries to style.css
+- [x] **Implement Gemini API Integration**
+  - [x] Configure `gemini-service.js` REST endpoint
+  - [x] Craft structured prompts asking for clinical dietetics advice
+  - [x] Define JSON schemas matching the options, days, meals, and department items
+- [x] **Wire Up Main Application Controller**
+  - [x] Implement local storage API Key get/set/delete logic in `app.js`
+  - [x] Handle form submission, loading state trigger, and API dispatching
+  - [x] Build dynamically rendered option selector cards
+  - [x] Wire calendar schedule rendering and checkbox items on option changes
+  - [x] Bind print PDF export trigger
+- [x] **Verification & Handover**
+  - [x] Validate metric/imperial unit conversions
+  - [x] Verify error states (e.g. empty key, API failure)
+  - [x] Verify print layout hides buttons and matches page margins

@@ -1,0 +1,1068 @@
+/* AuraDiet Global Design System & Styling */
+
+:root {
+  /* HSL Color Tokens - Dark Mode Default */
+  --bg-primary: #0a0f0d;
+  --bg-secondary: #121a16;
+  --bg-tertiary: #192520;
+  
+  --accent-primary: #10b981; /* Emerald Green */
+  --accent-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --accent-hover: #059669;
+  --accent-light: rgba(16, 185, 129, 0.1);
+  --accent-border: rgba(16, 185, 129, 0.25);
+  
+  --text-main: #f3f4f6;
+  --text-muted: #9ca3af;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  --backdrop-blur: blur(12px);
+  
+  --error-color: #ef4444;
+  --success-color: #10b981;
+  --info-color: #3b82f6;
+  
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+/* Light Mode Tokens */
+[data-theme="light"] {
+  --bg-primary: #f4f6f5;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e9ecea;
+  
+  --accent-primary: #059669;
+  --accent-gradient: linear-gradient(135deg, #059669 0%, #047857 100%);
+  --accent-hover: #047857;
+  --accent-light: rgba(5, 150, 105, 0.08);
+  --accent-border: rgba(5, 150, 105, 0.18);
+  
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --border-color: rgba(0, 0, 0, 0.08);
+  --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+a {
+  color: var(--accent-primary);
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--accent-hover);
+}
+
+.container {
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--accent-gradient);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+  background: var(--accent-primary);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: var(--bg-tertiary);
+  color: var(--text-main);
+  border-color: var(--border-color);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-primary);
+  border-color: var(--accent-border);
+}
+
+.btn-text {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-text:hover {
+  color: var(--text-main);
+}
+
+.btn-icon {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+}
+
+.btn-icon:hover {
+  background: var(--accent-light);
+  border-color: var(--accent-border);
+  color: var(--accent-primary);
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  border-radius: 8px;
+}
+
+.btn-lg {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  border-radius: 14px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.text-error {
+  color: var(--error-color) !important;
+}
+
+/* Glassmorphism Cards */
+.glass-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 1.75rem;
+  box-shadow: var(--card-shadow);
+  backdrop-filter: var(--backdrop-blur);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: var(--accent-border);
+}
+
+/* App Header styling */
+.app-header {
+  background-color: rgba(10, 15, 13, 0.8);
+  backdrop-filter: var(--backdrop-blur);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: background-color 0.3s ease;
+}
+
+[data-theme="light"] .app-header {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.header-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-logo {
+  font-size: 1.75rem;
+}
+
+.brand h1 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--text-main) 0%, var(--accent-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-badge {
+  font-size: 0.75rem;
+  background: var(--accent-light);
+  color: var(--accent-primary);
+  border: 1px solid var(--accent-border);
+  padding: 0.15rem 0.5rem;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Layout Grid */
+.main-layout {
+  display: grid;
+  grid-template-columns: 440px 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+  flex: 1;
+}
+
+.sidebar-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Forms & Inputs */
+.custom-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+input[type="number"],
+input[type="password"],
+input[type="text"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text-main);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+/* Unit toggle Segmented Controls */
+.inline-toggle {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-tertiary);
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.toggle-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.segmented-control {
+  display: flex;
+  background: var(--bg-primary);
+  padding: 0.25rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.segmented-control input[type="radio"] {
+  display: none;
+}
+
+.segmented-control label {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 6px;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.segmented-control input[type="radio"]:checked + label {
+  background: var(--accent-primary);
+  color: white;
+}
+
+/* Checkboxes Grid */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.checkbox-container {
+  display: block;
+  position: relative;
+  padding-left: 2rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-main);
+  user-select: none;
+}
+
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 1px;
+  left: 0;
+  height: 18px;
+  width: 18px;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+  border-color: var(--accent-primary);
+}
+
+.checkbox-container input:checked ~ .checkmark {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.checkbox-container .checkmark:after {
+  left: 5px;
+  top: 2px;
+  width: 5px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* API Key Card special rules */
+.api-config-card {
+  border-color: var(--accent-border);
+  position: relative;
+  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.card-header h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+}
+
+.helper-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.helper-text-link {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.75rem;
+}
+
+.key-status-text {
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+}
+
+.status-active {
+  color: var(--success-color);
+}
+
+.status-inactive {
+  color: var(--error-color);
+}
+
+.input-with-action {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Results Workspace panel */
+.results-workspace {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Welcome Card styling */
+.welcome-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  height: 100%;
+  min-height: 500px;
+}
+
+.welcome-art {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.welcome-card h2 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+}
+
+.welcome-card p {
+  color: var(--text-muted);
+  max-width: 500px;
+  margin-bottom: 1.5rem;
+}
+
+.welcome-warning-api {
+  background: var(--accent-light);
+  border: 1px solid var(--accent-border);
+  padding: 0.75rem 1.25rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  color: var(--text-main) !important;
+}
+
+/* Skeleton Loading Animation */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.skeleton-pulse {
+  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
+  background-size: 200% 100%;
+  animation: loadingPulse 1.5s infinite;
+  border-radius: 12px;
+}
+
+@keyframes loadingPulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-header {
+  height: 60px;
+  width: 50%;
+}
+
+.skeleton-options-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+}
+
+.skeleton-option-card {
+  height: 80px;
+}
+
+/* Generated results structures */
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.results-header h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.results-header p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* 5 Options strategies row */
+.strategies-options-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.strategy-option-tab {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  padding: 1rem 0.75rem;
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 85px;
+}
+
+.strategy-option-tab:hover {
+  border-color: var(--accent-border);
+  background: var(--bg-tertiary);
+  transform: translateY(-2px);
+}
+
+.strategy-option-tab.active {
+  background: var(--accent-light);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 1px var(--accent-primary);
+}
+
+.strategy-option-tab .option-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--accent-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.strategy-option-tab .option-name {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-main);
+}
+
+/* Strategy summary card info */
+.strategy-summary-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.strategy-summary-content {
+  flex: 1;
+}
+
+.strategy-summary-content h3 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: var(--accent-primary);
+}
+
+.strategy-summary-content p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.macros-summary-badge {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  padding: 1rem;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 280px;
+}
+
+.macros-summary-badge h4 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.macro-chips-container {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.macro-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.35rem 0.65rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  min-width: 58px;
+}
+
+.macro-chip .macro-num {
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.macro-chip .macro-lbl {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Section Switcher Tabs */
+.workspace-tabs-container {
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tab-triggers {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.tab-trigger {
+  background: none;
+  border: none;
+  padding: 0.75rem 0;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.tab-trigger:hover {
+  color: var(--text-main);
+}
+
+.tab-trigger.active {
+  color: var(--accent-primary);
+}
+
+.tab-trigger.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--accent-primary);
+}
+
+/* Workspace tab panels display */
+.workspace-tab-panel {
+  display: none;
+}
+
+.workspace-tab-panel.active {
+  display: block;
+}
+
+/* 7-Day Calendar Grid */
+.days-schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.day-plan-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.day-plan-card:hover {
+  border-color: var(--accent-border);
+}
+
+.day-title-header {
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.day-title-header h4 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--accent-primary);
+}
+
+.meal-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.meal-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-primary);
+}
+
+.meal-desc {
+  font-size: 0.85rem;
+  color: var(--text-main);
+}
+
+/* Grocery list department checkbox styling */
+.grocery-list-card {
+  padding: 2rem;
+}
+
+.grocery-header {
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.grocery-header h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--accent-primary);
+}
+
+.grocery-header p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.grocery-departments-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.75rem;
+}
+
+.grocery-dept-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.grocery-dept-section h4 {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-main);
+  border-bottom: 2px solid var(--accent-light);
+  padding-bottom: 0.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.grocery-item-checkbox {
+  display: block;
+  position: relative;
+  padding-left: 1.75rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-main);
+  user-select: none;
+}
+
+.grocery-item-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.grocery-item-checkbox .checkbox-box {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  height: 15px;
+  width: 15px;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.grocery-item-checkbox input:checked ~ .checkbox-box {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+
+.grocery-item-checkbox .checkbox-box:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.grocery-item-checkbox input:checked ~ .checkbox-box:after {
+  display: block;
+}
+
+.grocery-item-checkbox .checkbox-box:after {
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 7px;
+  border: solid white;
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+}
+
+.grocery-item-checkbox input:checked ~ .item-text {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+/* App Footer styling */
+.app-footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border-color);
+  padding: 1.5rem 0;
+  text-align: center;
+  background-color: var(--bg-secondary);
+}
+
+.footer-content p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1100px) {
+  .main-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .strategies-options-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .strategy-summary-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .macros-summary-badge {
+    width: 100%;
+    min-width: unset;
+  }
+}
+
+/* Print/PDF Friendly Styles Override */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-size: 11pt;
+  }
+  
+  .app-header,
+  .sidebar-panel,
+  .results-header button,
+  .workspace-tabs-container,
+  .app-footer,
+  #results-placeholder,
+  #results-loading {
+    display: none !important;
+  }
+  
+  .main-layout {
+    grid-template-columns: 1fr !important;
+    margin: 0 !important;
+    gap: 0 !important;
+  }
+  
+  .results-workspace {
+    width: 100% !important;
+  }
+  
+  .results-container {
+    display: block !important;
+  }
+  
+  .strategies-options-grid {
+    display: none !important;
+  }
+  
+  .glass-card {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin-bottom: 2rem !important;
+  }
+  
+  .strategy-summary-card {
+    border-bottom: 2px solid #000000 !important;
+    padding-bottom: 1rem !important;
+    margin-bottom: 2rem !important;
+  }
+  
+  .strategy-summary-content h3 {
+    font-size: 18pt !important;
+    color: #000000 !important;
+  }
+  
+  .macros-summary-badge {
+    border: 1px solid #000000 !important;
+    background: none !important;
+  }
+  
+  .macro-chip {
+    border: 1px solid #000000 !important;
+  }
+  
+  .macro-chip .macro-num,
+  .macro-chip .macro-lbl {
+    color: #000000 !important;
+  }
+  
+  /* Show both schedule and grocery in printout */
+  .workspace-tab-panel {
+    display: block !important;
+    page-break-before: always;
+    margin-top: 2rem;
+  }
+  
+  .day-plan-card {
+    background: none !important;
+    border: 1px solid #000000 !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+  
+  .days-schedule-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10pt !important;
+  }
+  
+  .grocery-departments-container {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 15pt !important;
+  }
+  
+  .grocery-item-checkbox input:checked ~ .item-text {
+    text-decoration: none !important;
+    color: #000000 !important;
+  }
+}
