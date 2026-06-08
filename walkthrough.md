@@ -1,47 +1,42 @@
-# Walkthrough: AuraDiet Weekly AI Diet Planner
+# Walkthrough: Rebuilding AuraDiet in React
 
-We have completed the design and implementation of **AuraDiet**, a modern wellness web application that crafts 5 customized weekly diet strategies matching your medical profiles and goals using Google Gemini.
+We have completed rebuilding the **AuraDiet** Weekly AI Diet Planner as a modern single-page application using **Vite + React**. 
 
 ---
 
-## 1. Summary of Completed Features
+## 1. Summary of React Upgrades
 
-### 🌿 1. Modern Glassmorphism Design
-* **Wellness Styling:** Developed a responsive layout in [style.css](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/style.css) utilizing HSL color variables (emerald green, soft mints, steel grays) supporting dark mode by default with light mode toggle controls.
-* **Compact Credentials Panel:** Built a collapsible API configuration card in [index.html](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/index.html) to input and manage Google Gemini keys locally.
-* **Loading Skeletons:** Implemented pulsing skeleton cards that render while waiting for AI generation requests.
+### ⚛️ 1. Component Modularity & Refactoring
+* **App Shell Layout:** Refactored the core layout in [App.jsx](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/App.jsx) to serve as the global state orchestrator managing API key credentials, selection tabs, active diet selections, and dark/light themes.
+* **Reusable UI Elements:**
+  * **[ApiKeyPanel.jsx](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/components/ApiKeyPanel.jsx):** Dedicated card managing Gemini credentials, secure visibility toggle, key storage, and clear triggers.
+  * **[ParameterForm.jsx](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/components/ParameterForm.jsx):** Controlled form managing clinical options and age/weight/height parameters. Unit conversions (metric vs imperial) update state values instantly.
+  * **[StrategySelector.jsx](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/components/StrategySelector.jsx):** Renders the 5 strategy tabs recommendation grid.
+  * **[MealGrid.jsx](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/components/MealGrid.jsx):** Displays the 7-day card schedule.
+  * **[GroceryList.jsx](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/components/GroceryList.jsx):** Maintains checked checklist items in a React `Set` state, resetting automatically when the strategy selection changes.
 
-### 🧪 2. Multi-Constraint Clinical Inputs
-* **Demographics:** Capture Age, Gender, Weight, and Height. Segmented controls toggle between **Metric (kg/cm)** and **Imperial (lbs/in)** units dynamically, updating form labels.
-* **Health Profiles:** Select clinical constraints (Diabetes, Hypertension, High Cholesterol, Celiac, Gout, Kidney Disease).
-* **Dietary Preferences:** Multi-select dietary restrictions (Vegan, Vegetarian, Keto, Halal, Gluten-Free, Nut-Free, Dairy-Free, Egg-Free).
-
-### 🤖 3. Structured JSON Gemini API Service
-* **REST Calls:** Created [gemini-service.js](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/gemini-service.js) to dispatch POST queries to the Gemini 1.5 Flash model directly.
-* **Response Constraints:** Leveraged `responseMimeType: "application/json"` and defined a rigid `responseSchema` inside the config body. This guarantees Gemini responds with clean, parseable JSON matching our exact layout, eliminating formatting failures.
-
-### 📅 4. Interactive Schedules & Shopping Lists
-* **5 Option Tabs:** Displays cards representing the 5 recommended nutritional strategies (e.g. Option 1: Mediterranean Balanced, Option 2: Low-Glycemic Index, etc.).
-* **7-Day Grid:** Selecting a strategy renders a 7-day card calendar showing breakfast, lunch, dinner, snack, and macronutrient targets.
-* **Department Groceries:** Compiles a shopping checklist grouped by department (Produce, Proteins, Pantry, etc.) with functional cross-out checkboxes in [app.js](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/app.js).
-
-### 🖨️ 5. Clean PDF & Print Layouts
-* **Print Styles Override:** Configured print media queries in [style.css](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/style.css) that hide header action bars, input forms, and settings panels. When printing or exporting to PDF, it generates a clean page with only your diet strategies, 7-day calendar, and shopping checklist.
+### 🧪 2. Secure API & Style Migrations
+* **Gemini Service:** Re-housed REST fetch logic inside [geminiService.js](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/services/geminiService.js).
+* **Styles Compilation:** Migrated all premium wellness HSL styles, backdrop blurs, custom checks, and print media overrides into [index.css](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/index.css).
 
 ---
 
 ## 2. Code File Architecture
 
-* **[index.html](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/index.html):** Core HTML containing inputs, selector tabs, results grid, and dialogs.
-* **[style.css](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/style.css):** Glassmorphism wellness styling and print media queries.
-* **[gemini-service.js](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/gemini-service.js):** REST fetch interface with JSON schema config.
-* **[app.js](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/app.js):** UI tab-trigger switches, local key persistence, and print bindings.
-* **[README.md](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/README.md):** Deployment instructions and API guides.
+* **[index.html](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/index.html):** Standard Vite HTML shell referencing React client compiler.
+* **[vite.config.js](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/vite.config.js):** Configuration compiling React assets.
+* **[package.json](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/package.json):** React dependencies.
+* **[src/main.jsx](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/main.jsx):** React dom root initializer.
+* **[src/App.jsx](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/App.jsx):** Main controller.
+* **[src/index.css](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/index.css):** Global design stylesheet.
+* **[src/services/geminiService.js](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/services/geminiService.js):** REST API integrations.
+* **[src/components/](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/components/):** Folder containing components (`ApiKeyPanel.jsx`, `ParameterForm.jsx`, `StrategySelector.jsx`, `MealGrid.jsx`, `GroceryList.jsx`).
 
 ---
 
-## 3. Local Verification
+## 3. Server Launch & UI Check
 
-* Served locally via Python on port `8087` (served on http://localhost:8087/).
-* The initial page layout renders correctly:
-  ![AuraDiet Parameters Form](/Users/bharatpanthee/.gemini/antigravity-ide/brain/7d1bfaa2-4e47-43e0-8e1e-ca8e66fa352f/auradiet_parameters_form_1780872315459.png)
+* Dev server launched successfully using `npm run dev`.
+* Served on port 5173: **http://localhost:5173/**.
+* Verified that components compile correctly and render the React layout:
+  ![AuraDiet React Parameters Form](/Users/bharatpanthee/.gemini/antigravity-ide/brain/7d1bfaa2-4e47-43e0-8e1e-ca8e66fa352f/auradiet_react_form_1780959359884.png)

@@ -1,29 +1,25 @@
-# Diet Planner Development Tasks
+# Diet Planner React Rebuild Tasks
 
-- [x] **Initialize Project Architecture**
-  - [x] Create `index.html` structure
-  - [x] Create `style.css` stylesheet
-  - [x] Create `gemini-service.js` module
-  - [x] Create `app.js` module
-  - [x] Create `README.md` instructions
-- [x] **Design Glassmorphism UI & Forms**
-  - [x] Build collapsible API key input card
-  - [x] Create weekly planning input form with units selectors
-  - [x] Design cards layout for the 5 generated strategies
-  - [x] Layout the 7-day daily meal grid and department grocery checklist
-  - [x] Add loading state skeleton card animations
-  - [x] Add print-friendly media queries to style.css
-- [x] **Implement Gemini API Integration**
-  - [x] Configure `gemini-service.js` REST endpoint
-  - [x] Craft structured prompts asking for clinical dietetics advice
-  - [x] Define JSON schemas matching the options, days, meals, and department items
-- [x] **Wire Up Main Application Controller**
-  - [x] Implement local storage API Key get/set/delete logic in `app.js`
-  - [x] Handle form submission, loading state trigger, and API dispatching
-  - [x] Build dynamically rendered option selector cards
-  - [x] Wire calendar schedule rendering and checkbox items on option changes
-  - [x] Bind print PDF export trigger
-- [x] **Verification & Handover**
-  - [x] Validate metric/imperial unit conversions
-  - [x] Verify error states (e.g. empty key, API failure)
-  - [x] Verify print layout hides buttons and matches page margins
+- [x] **Initialize Vite + React Architecture**
+  - [x] Terminate background Python server (task-718) on port 8087
+  - [x] Initialize Vite + React project files in `diet-planner` directory
+  - [x] Install package dependencies (`npm install`)
+- [x] **Migrate Styles & Configuration**
+  - [x] Create entry `index.html` referencing React mount script
+  - [x] Create `vite.config.js` configuration
+  - [x] Migrate `style.css` styles into `src/index.css`
+- [x] **Build React Components & Services**
+  - [x] Migrate API logic into `src/services/geminiService.js`
+  - [x] Implement `ApiKeyPanel.jsx` credential component
+  - [x] Implement `ParameterForm.jsx` controlled parameters form component
+  - [x] Implement `StrategySelector.jsx` option selector tabs
+  - [x] Implement `MealGrid.jsx` 7-day daily meal grids
+  - [x] Implement `GroceryList.jsx` department-wise shopping lists
+- [x] **Integrate Global State & Layout**
+  - [x] Implement parent state management and shell layout in `src/App.jsx`
+  - [x] Bind loading skeleton frames and results cards selectors
+  - [x] Wire print and theme controls
+- [x] **Verification & Server Launch**
+  - [x] Launch Vite dev server
+  - [x] Verify key persistence and metric toggle renders
+  - [x] Verify print views and shopping checklist cross-out states

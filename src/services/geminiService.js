@@ -8,7 +8,7 @@
  */
 export async function generateWeeklyDietPlans(apiKey, userInput) {
   if (!apiKey) {
-    throw new Error("Please provide a valid Gemini API Key.");
+    throw new Error("Please configure a valid Gemini API Key.");
   }
 
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
@@ -34,7 +34,6 @@ For each of the 5 options:
 4. Provide a consolidated, department-wise grocery list with department categories (e.g., Produce, Proteins, Dairy/Alternatives, Pantry, Bakery, etc.) and item check-offs.
   `;
 
-  // Define structured JSON schema response
   const requestBody = {
     contents: [
       {
@@ -77,10 +76,10 @@ For each of the 5 options:
                       meals: {
                         type: "OBJECT",
                         properties: {
-                          breakfast: { type: "STRING", description: "Detailed breakfast suggestion" },
-                          lunch: { type: "STRING", description: "Detailed lunch suggestion" },
-                          dinner: { type: "STRING", description: "Detailed dinner suggestion" },
-                          snack: { type: "STRING", description: "Detailed snack suggestion" }
+                          breakfast: { type: "STRING" },
+                          lunch: { type: "STRING" },
+                          dinner: { type: "STRING" },
+                          snack: { type: "STRING" }
                         },
                         required: ["breakfast", "lunch", "dinner", "snack"]
                       }
