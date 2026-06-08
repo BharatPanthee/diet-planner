@@ -11,7 +11,7 @@ export async function generateWeeklyDietPlans(apiKey, userInput) {
     throw new Error("Please configure a valid Gemini API Key.");
   }
 
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
   const promptText = `
 You are an expert clinical dietitian and nutritionist. 
