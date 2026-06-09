@@ -86,7 +86,6 @@ export default function App() {
           <div className="brand">
             <span className="brand-logo">🌿</span>
             <h1>AuraDiet</h1>
-            <span className="brand-badge">AI Planner</span>
           </div>
 
           <div className="header-actions">
