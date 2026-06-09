@@ -76,12 +76,36 @@ export default function ApiKeyPanel({ currentKey, currentModel, onSave, onClear,
               cursor: "pointer"
             }}
           >
-            <option value="gemini-2.5-flash">Gemini 2.5 Flash (Recommended - Est. cost: ~$0.001 / run)</option>
-            <option value="gemini-2.0-flash">Gemini 2.0 Flash (Est. cost: ~$0.001 / run)</option>
-            <option value="gemini-1.5-flash">Gemini 1.5 Flash (Legacy - Est. cost: ~$0.001 / run)</option>
-            <option value="gemini-2.5-pro">Gemini 2.5 Pro (Rich Quality - Est. cost: ~$0.016 / run)</option>
-            <option value="gemini-1.5-pro">Gemini 1.5 Pro (Legacy Quality - Est. cost: ~$0.016 / run)</option>
+            <option value="gemini-2.5-flash">Gemini 2.5 Flash (Recommended)</option>
+            <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+            <option value="gemini-1.5-flash">Gemini 1.5 Flash (Legacy)</option>
+            <option value="gemini-2.5-pro">Gemini 2.5 Pro (Rich Detail)</option>
+            <option value="gemini-1.5-pro">Gemini 1.5 Pro (Legacy Detail)</option>
           </select>
+        </div>
+
+        {/* Dynamic Cost Estimation card */}
+        <div style={{
+          marginTop: "0.6rem",
+          fontSize: "0.80rem",
+          background: "rgba(255, 255, 255, 0.02)",
+          padding: "0.6rem 0.8rem",
+          borderRadius: "var(--radius-sm)",
+          border: "1px dashed rgba(255,255,255,0.08)"
+        }}>
+          {modelInput.includes("pro") ? (
+            <>
+              <p style={{ margin: 0, fontWeight: "600", color: "#10b981" }}>Est. Cost: ~$0.0154 / run</p>
+              <p style={{ margin: "2px 0 0 0", color: "rgba(255,255,255,0.5)", fontSize: "0.75rem" }}>~4,000 tokens (1.2k input, 2.8k output)</p>
+              <p style={{ margin: "2px 0 0 0", color: "rgba(255,255,255,0.3)", fontSize: "0.70rem" }}>Rate: $1.25/M input, $5.00/M output</p>
+            </>
+          ) : (
+            <>
+              <p style={{ margin: 0, fontWeight: "600", color: "#10b981" }}>Est. Cost: ~$0.0009 / run</p>
+              <p style={{ margin: "2px 0 0 0", color: "rgba(255,255,255,0.5)", fontSize: "0.75rem" }}>~4,000 tokens (1.2k input, 2.8k output)</p>
+              <p style={{ margin: "2px 0 0 0", color: "rgba(255,255,255,0.3)", fontSize: "0.70rem" }}>Rate: $0.075/M input, $0.30/M output (Free tier available)</p>
+            </>
+          )}
         </div>
 
         <div className="form-row" style={{ marginTop: "1rem" }}>
