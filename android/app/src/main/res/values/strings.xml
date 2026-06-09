@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">AuraDiet</string>
+    <string name="title_activity_main">AuraDiet</string>
+    <string name="package_name">com.bharatpanthee.auradiet</string>
+    <string name="custom_url_scheme">com.bharatpanthee.auradiet</string>
+</resources>
