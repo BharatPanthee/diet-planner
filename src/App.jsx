@@ -86,7 +86,7 @@ export default function App() {
           <div className="brand">
             <span className="brand-logo">🌿</span>
             <h1>AuraDiet</h1>
-            <span className="brand-badge">React AI</span>
+            <span className="brand-badge">AI Planner</span>
           </div>
 
           <div className="header-actions">
@@ -131,7 +131,7 @@ export default function App() {
           {!loading && !strategies && (
             <div id="results-placeholder" className="glass-card welcome-card">
               <div className="welcome-art">🥗📅🥦</div>
-              <h2>Your React AI Nutrition Workspace</h2>
+              <h2>Your AI Nutrition Workspace</h2>
               <p>
                 Fill in your parameters on the left and click <strong>Generate</strong>. AuraDiet will use Google Gemini to craft 5 distinct diet strategies tailored to your health profile.
               </p>
