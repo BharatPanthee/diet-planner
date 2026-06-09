@@ -76,10 +76,11 @@ export default function ApiKeyPanel({ currentKey, currentModel, onSave, onClear,
               cursor: "pointer"
             }}
           >
-            <option value="gemini-2.5-flash">Gemini 2.5 Flash (Recommended - Fast & Cheap)</option>
-            <option value="gemini-1.5-flash">Gemini 1.5 Flash (Legacy - Fast & Cheap)</option>
-            <option value="gemini-2.5-pro">Gemini 2.5 Pro (Rich Quality - Expensive)</option>
-            <option value="gemini-1.5-pro">Gemini 1.5 Pro (Legacy Quality - Expensive)</option>
+            <option value="gemini-2.5-flash">Gemini 2.5 Flash (Recommended - Est. cost: ~$0.001 / run)</option>
+            <option value="gemini-2.0-flash">Gemini 2.0 Flash (Est. cost: ~$0.001 / run)</option>
+            <option value="gemini-1.5-flash">Gemini 1.5 Flash (Legacy - Est. cost: ~$0.001 / run)</option>
+            <option value="gemini-2.5-pro">Gemini 2.5 Pro (Rich Quality - Est. cost: ~$0.016 / run)</option>
+            <option value="gemini-1.5-pro">Gemini 1.5 Pro (Legacy Quality - Est. cost: ~$0.016 / run)</option>
           </select>
         </div>
 
