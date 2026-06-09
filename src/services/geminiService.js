@@ -6,12 +6,12 @@
  * @param {Object} userInput - User constraints.
  * @returns {Promise<Object>} The parsed JSON diet plan strategies.
  */
-export async function generateWeeklyDietPlans(apiKey, userInput) {
+export async function generateWeeklyDietPlans(apiKey, userInput, modelName = "gemini-2.5-flash") {
   if (!apiKey) {
     throw new Error("Please configure a valid Gemini API Key.");
   }
 
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
 
   const promptText = `
 You are an expert clinical dietitian and nutritionist. 
@@ -134,7 +134,11 @@ For each of the 5 options:
   }
 
   try {
-    return JSON.parse(textResult.trim());
+    const parsedData = JSON.parse(textResult.trim());
+    if (responseData.usageMetadata) {
+      parsedData.usageMetadata = responseData.usageMetadata;
+    }
+    return parsedData;
   } catch (err) {
     console.error("Failed to parse Gemini response text as JSON:", textResult);
     throw new Error("Received an invalid JSON response structure from the AI model.");

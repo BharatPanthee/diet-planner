@@ -9,13 +9,15 @@ import { generateWeeklyDietPlans } from "./services/geminiService";
 export default function App() {
   const [theme, setTheme] = useState("dark");
   const [apiKey, setApiKey] = useState("");
+  const [selectedModel, setSelectedModel] = useState("gemini-2.5-flash");
   const [showApiKeyPanel, setShowApiKeyPanel] = useState(false);
   const [loading, setLoading] = useState(false);
   const [strategies, setStrategies] = useState(null);
   const [activeStrategyId, setActiveStrategyId] = useState(null);
   const [activeTab, setActiveTab] = useState("schedule");
+  const [usageStats, setUsageStats] = useState(null);
 
-  // Load theme and API key from local storage on mount
+  // Load theme and API credentials from local storage on mount
   useEffect(() => {
     const savedTheme = localStorage.getItem("auradiet-theme") || "dark";
     setTheme(savedTheme);
@@ -23,7 +25,32 @@ export default function App() {
 
     const savedKey = localStorage.getItem("auradiet_gemini_key") || "";
     setApiKey(savedKey);
+
+    const savedModel = localStorage.getItem("auradiet_gemini_model") || "gemini-2.5-flash";
+    setSelectedModel(savedModel);
   }, []);
+
+  const calculateCost = (model, usage) => {
+    if (!usage) return null;
+    const promptTokens = usage.promptTokenCount || 0;
+    const candidatesTokens = usage.candidatesTokenCount || 0;
+    
+    let inputRate = 0;
+    let outputRate = 0;
+    
+    if (model.includes("pro")) {
+      // Pro pricing: $1.25 / million input, $5.00 / million output
+      inputRate = 1.25 / 1000000;
+      outputRate = 5.00 / 1000000;
+    } else {
+      // Flash pricing: $0.075 / million input, $0.30 / million output
+      inputRate = 0.075 / 1000000;
+      outputRate = 0.30 / 1000000;
+    }
+    
+    const cost = (promptTokens * inputRate) + (candidatesTokens * outputRate);
+    return cost.toFixed(5);
+  };
 
   const handleToggleTheme = () => {
     const nextTheme = theme === "dark" ? "light" : "dark";
@@ -32,15 +59,20 @@ export default function App() {
     localStorage.setItem("auradiet-theme", nextTheme);
   };
 
-  const handleSaveApiKey = (key) => {
+  const handleSaveApiKey = (key, model) => {
     localStorage.setItem("auradiet_gemini_key", key);
+    localStorage.setItem("auradiet_gemini_model", model);
     setApiKey(key);
+    setSelectedModel(model);
     setShowApiKeyPanel(false);
   };
 
   const handleClearApiKey = () => {
     localStorage.removeItem("auradiet_gemini_key");
+    localStorage.removeItem("auradiet_gemini_model");
     setApiKey("");
+    setSelectedModel("gemini-2.5-flash");
+    setUsageStats(null);
   };
 
   const handleFormSubmit = async (params) => {
@@ -52,12 +84,22 @@ export default function App() {
 
     setLoading(true);
     setStrategies(null);
+    setUsageStats(null);
 
     try {
-      const result = await generateWeeklyDietPlans(apiKey, params);
+      const result = await generateWeeklyDietPlans(apiKey, params, selectedModel);
       if (result && result.strategies && result.strategies.length > 0) {
         setStrategies(result.strategies);
         setActiveStrategyId(result.strategies[0].id);
+        if (result.usageMetadata) {
+          setUsageStats({
+            model: selectedModel,
+            promptTokens: result.usageMetadata.promptTokenCount,
+            candidatesTokens: result.usageMetadata.candidatesTokenCount,
+            totalTokens: result.usageMetadata.totalTokenCount,
+            cost: calculateCost(selectedModel, result.usageMetadata)
+          });
+        }
         setLoading(false);
       } else {
         throw new Error("Invalid output received from Gemini API.");
@@ -115,6 +157,7 @@ export default function App() {
           {showApiKeyPanel && (
             <ApiKeyPanel
               currentKey={apiKey}
+              currentModel={selectedModel}
               onSave={handleSaveApiKey}
               onClear={handleClearApiKey}
               onClose={() => setShowApiKeyPanel(false)}
@@ -190,6 +233,17 @@ export default function App() {
                   Print / Export PDF
                 </button>
               </header>
+
+              {/* Cost and Usage Badge */}
+              {usageStats && (
+                <div className="usage-cost-banner glass-card" style={{ marginBottom: "1.25rem", padding: "0.75rem 1rem", fontSize: "0.85rem", borderLeft: "4px solid var(--accent)", display: "flex", flexWrap: "wrap", gap: "0.5rem", alignItems: "center" }}>
+                  <span>🤖 <strong>Model:</strong> {usageStats.model}</span>
+                  <span style={{ color: "rgba(255,255,255,0.15)", margin: "0 0.25rem" }}>|</span>
+                  <span>📊 <strong>Tokens:</strong> {usageStats.totalTokens.toLocaleString()} (In: {usageStats.promptTokens.toLocaleString()}, Out: {usageStats.candidatesTokens.toLocaleString()})</span>
+                  <span style={{ color: "rgba(255,255,255,0.15)", margin: "0 0.25rem" }}>|</span>
+                  <span>💰 <strong>Estimated Cost:</strong> <span className="cost-value" style={{ color: "var(--accent)", fontWeight: "bold" }}>${usageStats.cost}</span></span>
+                </div>
+              )}
 
               {/* Strategies options row */}
               <StrategySelector
