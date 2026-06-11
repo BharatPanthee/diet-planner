@@ -38,14 +38,31 @@ export default function App() {
     let inputRate = 0;
     let outputRate = 0;
     
-    if (model.includes("pro")) {
-      // Pro pricing: $1.25 / million input, $5.00 / million output
-      inputRate = 1.25 / 1000000;
-      outputRate = 5.00 / 1000000;
-    } else {
-      // Flash pricing: $0.075 / million input, $0.30 / million output
-      inputRate = 0.075 / 1000000;
-      outputRate = 0.30 / 1000000;
+    switch (model) {
+      case "gemini-2.5-flash":
+        inputRate = 0.30 / 1000000;
+        outputRate = 2.50 / 1000000;
+        break;
+      case "gemini-2.0-flash":
+        inputRate = 0.10 / 1000000;
+        outputRate = 0.40 / 1000000;
+        break;
+      case "gemini-1.5-flash":
+        inputRate = 0.075 / 1000000;
+        outputRate = 0.30 / 1000000;
+        break;
+      case "gemini-2.5-pro":
+        inputRate = 1.25 / 1000000;
+        outputRate = 10.00 / 1000000;
+        break;
+      case "gemini-1.5-pro":
+        inputRate = 1.25 / 1000000;
+        outputRate = 5.00 / 1000000;
+        break;
+      default:
+        // Default fallback
+        inputRate = 0.30 / 1000000;
+        outputRate = 2.50 / 1000000;
     }
     
     const cost = (promptTokens * inputRate) + (candidatesTokens * outputRate);

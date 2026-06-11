@@ -93,19 +93,43 @@ export default function ApiKeyPanel({ currentKey, currentModel, onSave, onClear,
           borderRadius: "var(--radius-sm)",
           border: "1px dashed rgba(255,255,255,0.08)"
         }}>
-          {modelInput.includes("pro") ? (
-            <>
-              <p style={{ margin: 0, fontWeight: "600", color: "#10b981" }}>Est. Cost: ~$0.0154 / run</p>
-              <p style={{ margin: "2px 0 0 0", color: "rgba(255,255,255,0.5)", fontSize: "0.75rem" }}>~4,000 tokens (1.2k input, 2.8k output)</p>
-              <p style={{ margin: "2px 0 0 0", color: "rgba(255,255,255,0.3)", fontSize: "0.70rem" }}>Rate: $1.25/M input, $5.00/M output</p>
-            </>
-          ) : (
-            <>
-              <p style={{ margin: 0, fontWeight: "600", color: "#10b981" }}>Est. Cost: ~$0.0009 / run</p>
-              <p style={{ margin: "2px 0 0 0", color: "rgba(255,255,255,0.5)", fontSize: "0.75rem" }}>~4,000 tokens (1.2k input, 2.8k output)</p>
-              <p style={{ margin: "2px 0 0 0", color: "rgba(255,255,255,0.3)", fontSize: "0.70rem" }}>Rate: $0.075/M input, $0.30/M output (Free tier available)</p>
-            </>
-          )}
+          {(() => {
+            const MODEL_DETAILS = {
+              "gemini-2.5-flash": {
+                estCost: "0.0380",
+                tokens: "16,500 (1.5k input, 15.0k output)",
+                rateInfo: "$0.30/M input, $2.50/M output"
+              },
+              "gemini-2.0-flash": {
+                estCost: "0.0062",
+                tokens: "16,500 (1.5k input, 15.0k output)",
+                rateInfo: "$0.10/M input, $0.40/M output"
+              },
+              "gemini-1.5-flash": {
+                estCost: "0.0046",
+                tokens: "16,500 (1.5k input, 15.0k output)",
+                rateInfo: "$0.075/M input, $0.30/M output"
+              },
+              "gemini-2.5-pro": {
+                estCost: "0.1519",
+                tokens: "16,500 (1.5k input, 15.0k output)",
+                rateInfo: "$1.25/M input, $10.00/M output"
+              },
+              "gemini-1.5-pro": {
+                estCost: "0.0769",
+                tokens: "16,500 (1.5k input, 15.0k output)",
+                rateInfo: "$1.25/M input, $5.00/M output"
+              }
+            };
+            const details = MODEL_DETAILS[modelInput] || MODEL_DETAILS["gemini-2.5-flash"];
+            return (
+              <>
+                <p style={{ margin: 0, fontWeight: "600", color: "#10b981" }}>Est. Cost: ~${details.estCost} / run</p>
+                <p style={{ margin: "2px 0 0 0", color: "rgba(255,255,255,0.5)", fontSize: "0.75rem" }}>~{details.tokens} tokens</p>
+                <p style={{ margin: "2px 0 0 0", color: "rgba(255,255,255,0.3)", fontSize: "0.70rem" }}>Rate: {details.rateInfo} (Free tier available)</p>
+              </>
+            );
+          })()}
         </div>
 
         <div className="form-row" style={{ marginTop: "1rem" }}>
