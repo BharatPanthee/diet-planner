@@ -52,21 +52,21 @@ export default function ApiKeyPanel({
       <div style={{
         display: "flex",
         background: "rgba(0, 0, 0, 0.2)",
-        borderRadius: "var(--radius-sm)",
+        borderRadius: "8px",
         padding: "2px",
         marginBottom: "1rem"
       }}>
         <button
-          className="tab-trigger"
+          className="access-tab-btn"
           onClick={() => onToggleAccessMode("pro")}
           style={{
             flex: 1,
-            padding: "0.5rem",
+            padding: "0.55rem 0.5rem",
             fontSize: "0.8rem",
-            background: accessMode === "pro" ? "var(--accent)" : "transparent",
-            color: accessMode === "pro" ? "#000" : "var(--foreground)",
+            background: accessMode === "pro" ? "var(--accent-primary)" : "transparent",
+            color: accessMode === "pro" ? "var(--bg-primary)" : "var(--text-muted)",
             fontWeight: "bold",
-            borderRadius: "var(--radius-sm)",
+            borderRadius: "6px",
             border: "none",
             cursor: "pointer",
             transition: "all 0.2s ease"
@@ -75,16 +75,16 @@ export default function ApiKeyPanel({
           🌟 AuraDiet Pro
         </button>
         <button
-          className="tab-trigger"
+          className="access-tab-btn"
           onClick={() => onToggleAccessMode("byok")}
           style={{
             flex: 1,
-            padding: "0.5rem",
+            padding: "0.55rem 0.5rem",
             fontSize: "0.8rem",
-            background: accessMode === "byok" ? "var(--accent)" : "transparent",
-            color: accessMode === "byok" ? "#000" : "var(--foreground)",
+            background: accessMode === "byok" ? "var(--accent-primary)" : "transparent",
+            color: accessMode === "byok" ? "var(--bg-primary)" : "var(--text-muted)",
             fontWeight: "bold",
-            borderRadius: "var(--radius-sm)",
+            borderRadius: "6px",
             border: "none",
             cursor: "pointer",
             transition: "all 0.2s ease"
@@ -108,7 +108,7 @@ export default function ApiKeyPanel({
                 background: "rgba(255,255,255,0.02)",
                 border: "1px solid rgba(255,255,255,0.05)",
                 padding: "1rem",
-                borderRadius: "var(--radius-sm)",
+                borderRadius: "8px",
                 textAlign: "center"
               }}>
                 <p style={{ margin: "0 0 0.8rem 0", fontSize: "0.8rem", color: "rgba(255,255,255,0.7)" }}>
@@ -136,7 +136,7 @@ export default function ApiKeyPanel({
                 background: "rgba(255,255,255,0.02)",
                 border: "1px dashed rgba(255,255,255,0.1)",
                 padding: "1rem",
-                borderRadius: "var(--radius-sm)",
+                borderRadius: "8px",
                 textAlign: "center"
               }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", justifyContent: "center", marginBottom: "0.5rem" }}>
@@ -171,7 +171,7 @@ export default function ApiKeyPanel({
                 background: "linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(5, 150, 105, 0.03) 100%)",
                 border: "1px solid rgba(16, 185, 129, 0.2)",
                 padding: "1rem",
-                borderRadius: "var(--radius-sm)"
+                borderRadius: "8px"
               }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
@@ -264,10 +264,10 @@ export default function ApiKeyPanel({
                 style={{
                   width: "100%",
                   padding: "0.55rem",
-                  borderRadius: "var(--radius-sm)",
+                  borderRadius: "8px",
                   background: "rgba(255,255,255,0.05)",
                   border: "1px solid rgba(255,255,255,0.1)",
-                  color: "var(--foreground)",
+                  color: "var(--text-main)",
                   fontSize: "0.9rem",
                   marginTop: "0.35rem",
                   cursor: "pointer"
@@ -286,7 +286,7 @@ export default function ApiKeyPanel({
               fontSize: "0.80rem",
               background: "rgba(255, 255, 255, 0.02)",
               padding: "0.6rem 0.8rem",
-              borderRadius: "var(--radius-sm)",
+              borderRadius: "8px",
               border: "1px dashed rgba(255,255,255,0.08)"
             }}>
               {(() => {
