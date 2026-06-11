@@ -92,3 +92,22 @@ To guarantee extreme accuracy in billing projections, we refined both the pre-ge
 * **Dynamic Estimator UI:** Replaced generic placeholders in [ApiKeyPanel.jsx](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/components/ApiKeyPanel.jsx) with a dynamic estimation card that updates instantly when the selected model changes. Pre-generation projections are scaled using the application's average generation footprint (~1,500 input and ~15,000 output tokens).
 * **Precise Cost Banner:** Fixed the `calculateCost` function in [App.jsx](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/App.jsx) to match these exact model rates, ensuring the live usage-cost banner displays a 100% accurate price representation based on the API's actual return metadata.
 
+---
+
+## 6. AuraDiet Pro: Hybrid Monetization & Membership Model
+
+We built and integrated a fully interactive **hybrid monetization prototype** directly inside the client app to demonstrate the choice between **AuraDiet Pro** subscriptions and **Bring Your Own Key (BYOK)**:
+
+* **Dual-Access Panel:** The redesigned [ApiKeyPanel.jsx](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/components/ApiKeyPanel.jsx) features a clean tabbed selector at the top, allowing users to toggle between:
+  1. **🌟 AuraDiet Pro:** A hassle-free subscription where the developer's server keys handle generation under a weekly count cap.
+  2. **🔑 Custom API Key:** A free tier where the user inputs their own Gemini API key for unlimited custom generations.
+* **Simulated Google Authentication & States:**
+  * Added simulated Google Sign-In hooks and profile card rendering inside the Pro panel.
+  * Added a simulated subscription purchasing system that changes the user's tier to **Pro Active** upon upgrading.
+* **Weekly Limit Enforcement:**
+  * Implemented an active weekly counter tracking usage (e.g., "1 of 4 runs used").
+  * Added a premium glassmorphic **Paywall Modal** in [App.jsx](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/App.jsx) that automatically triggers if an unauthenticated user attempts Pro generation, a free user triggers it without upgrading, or a Pro user exceeds their 4 weekly runs.
+* **Offline Mock/Pro Fallback (No-Key Instant Trial):**
+  * Added a high-fidelity mock diet data module [mockDietData.js](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/services/mockDietData.js) that returns a complete, beautiful, and realistic 5-strategy plan instantly when executing in Pro mode without an active key. This allows new users to test-drive the application instantly.
+
+
