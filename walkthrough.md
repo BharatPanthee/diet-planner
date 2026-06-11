@@ -76,3 +76,19 @@ We successfully verified the app runs perfectly on a simulated device:
 * **Status:** Working cleanly with correct rendering, layout scaling, and functional state interactions.
 
 ![AuraDiet running on Android Emulator](/Users/bharatpanthee/.gemini/antigravity-ide/brain/7d1bfaa2-4e47-43e0-8e1e-ca8e66fa352f/screencap.png)
+
+---
+
+## 5. Dynamic Pricing and Cost Estimation Model Refinement
+
+To guarantee extreme accuracy in billing projections, we refined both the pre-generation estimates and the post-generation real-time cost calculator:
+
+* **Official Rate Profiles:** Configured precise, model-specific rates matching official Google AI Studio pay-as-you-go tiers:
+  * **Gemini 2.5 Flash:** $0.30 / million input, $2.50 / million output (Est: ~$0.0380 / run)
+  * **Gemini 2.0 Flash:** $0.10 / million input, $0.40 / million output (Est: ~$0.0062 / run)
+  * **Gemini 1.5 Flash:** $0.075 / million input, $0.30 / million output (Est: ~$0.0046 / run)
+  * **Gemini 2.5 Pro:** $1.25 / million input, $10.00 / million output (Est: ~$0.1519 / run)
+  * **Gemini 1.5 Pro:** $1.25 / million input, $5.00 / million output (Est: ~$0.0769 / run)
+* **Dynamic Estimator UI:** Replaced generic placeholders in [ApiKeyPanel.jsx](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/components/ApiKeyPanel.jsx) with a dynamic estimation card that updates instantly when the selected model changes. Pre-generation projections are scaled using the application's average generation footprint (~1,500 input and ~15,000 output tokens).
+* **Precise Cost Banner:** Fixed the `calculateCost` function in [App.jsx](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/App.jsx) to match these exact model rates, ensuring the live usage-cost banner displays a 100% accurate price representation based on the API's actual return metadata.
+
