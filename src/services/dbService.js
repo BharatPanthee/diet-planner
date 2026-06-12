@@ -1,6 +1,6 @@
 // Firestore Database Service for AuraDiet
 import { db } from "./firebase";
-import { doc, getDoc, setDoc, updateDoc, collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, collection, addDoc, serverTimestamp, query, orderBy, getDocs } from "firebase/firestore";
 
 /**
  * Fetch a user's subscription and limit profile from Firestore.
@@ -146,5 +146,26 @@ export async function getDeveloperApiKey() {
   } catch (error) {
     console.error("Failed to read developer API key from Firestore. Ensure security rules are configured and subscription is active.", error);
     throw new Error("Billing configuration error: Access denied to developer keys. Please verify your Pro status.");
+  }
+}
+
+/**
+ * Fetch all previously generated plans for a specific user from Firestore.
+ * @param {string} uid - Authenticated user's unique ID.
+ * @returns {Promise<Array>} List of generated plans.
+ */
+export async function getUserPlans(uid) {
+  try {
+    const plansRef = collection(db, "users", uid, "plans");
+    const q = query(plansRef, orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(q);
+    const plans = [];
+    querySnapshot.forEach((doc) => {
+      plans.push({ id: doc.id, ...doc.data() });
+    });
+    return plans;
+  } catch (error) {
+    console.error("Error fetching user plans from Firestore:", error);
+    throw error;
   }
 }

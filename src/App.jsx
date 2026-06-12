@@ -14,7 +14,8 @@ import {
   updateUserSubscription,
   incrementWeeklyUsage,
   saveGeneratedPlan,
-  getDeveloperApiKey
+  getDeveloperApiKey,
+  getUserPlans
 } from "./services/dbService";
 
 export default function App() {
@@ -27,6 +28,20 @@ export default function App() {
   const [activeStrategyId, setActiveStrategyId] = useState(null);
   const [activeTab, setActiveTab] = useState("schedule");
   const [usageStats, setUsageStats] = useState(null);
+  const [savedPlans, setSavedPlans] = useState([]);
+  const [loadingPlans, setLoadingPlans] = useState(false);
+
+  const fetchSavedPlans = async (uid) => {
+    setLoadingPlans(true);
+    try {
+      const plans = await getUserPlans(uid);
+      setSavedPlans(plans);
+    } catch (err) {
+      console.error("Error loading saved plans:", err);
+    } finally {
+      setLoadingPlans(false);
+    }
+  };
 
   // Authentication & Subscription states
   const [accessMode, setAccessMode] = useState("pro"); // "pro" or "byok"
@@ -80,11 +95,13 @@ export default function App() {
           };
           setMembership(membershipInfo);
           localStorage.setItem("auradiet_membership", JSON.stringify(membershipInfo));
+          fetchSavedPlans(user.uid);
         } catch (err) {
           console.error("Failed to load Firebase user profile:", err);
         }
       } else {
         setUserAuth(null);
+        setSavedPlans([]);
         localStorage.removeItem("auradiet_user_auth");
         const resetMem = {
           isPro: false,
@@ -258,6 +275,15 @@ export default function App() {
               isProBadge: false
             });
           }
+          
+          if (userAuth) {
+            try {
+              await saveGeneratedPlan(userAuth.uid, result);
+              await fetchSavedPlans(userAuth.uid);
+            } catch (dbErr) {
+              console.error("Failed to save BYOK plan to Firestore:", dbErr);
+            }
+          }
           setLoading(false);
         } else {
           throw new Error("Invalid output received from Gemini API.");
@@ -305,6 +331,7 @@ export default function App() {
             localStorage.setItem("auradiet_membership", JSON.stringify(membershipInfo));
             
             await saveGeneratedPlan(userAuth.uid, MOCK_DIET_PLANS);
+            await fetchSavedPlans(userAuth.uid);
             setLoading(false);
           }, 2500);
           return;
@@ -344,6 +371,7 @@ export default function App() {
           localStorage.setItem("auradiet_membership", JSON.stringify(membershipInfo));
           
           await saveGeneratedPlan(userAuth.uid, result);
+          await fetchSavedPlans(userAuth.uid);
           setLoading(false);
         } else {
           throw new Error("Invalid output received from Gemini API.");
@@ -417,6 +445,68 @@ export default function App() {
               onUpgrade={handleUpgrade}
               onToggleAccessMode={handleToggleAccessMode}
             />
+          )}
+
+          {userAuth && savedPlans.length > 0 && (
+            <div className="glass-card saved-plans-card" style={{ marginBottom: "1rem", padding: "1rem" }}>
+              <h3 style={{ margin: "0 0 0.75rem 0", fontSize: "0.95rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <span>📁</span> My Saved Plans ({savedPlans.length})
+              </h3>
+              <div style={{
+                maxHeight: "180px",
+                overflowY: "auto",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.5rem",
+                paddingRight: "4px"
+              }}>
+                {savedPlans.map((plan) => {
+                  const dateStr = plan.createdAt?.seconds 
+                    ? new Date(plan.createdAt.seconds * 1000).toLocaleDateString()
+                    : new Date().toLocaleDateString();
+                  
+                  const mainStrategy = plan.strategies?.[0]?.name || "Diet Plan";
+                  
+                  return (
+                    <button
+                      key={plan.id}
+                      onClick={() => {
+                        setStrategies(plan.strategies);
+                        setActiveStrategyId(plan.strategies[0].id);
+                        setUsageStats({
+                          model: "Loaded from Database History",
+                          promptTokens: 0,
+                          candidatesTokens: 0,
+                          totalTokens: 0,
+                          cost: "0.00000",
+                          isProBadge: true
+                        });
+                      }}
+                      className="btn btn-secondary"
+                      style={{
+                        textAlign: "left",
+                        padding: "0.6rem 0.8rem",
+                        fontSize: "0.8rem",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        gap: "2px",
+                        border: "1px solid rgba(255, 255, 255, 0.08)",
+                        width: "100%",
+                        background: "rgba(255, 255, 255, 0.02)"
+                      }}
+                    >
+                      <span style={{ fontWeight: "bold", color: "var(--accent-primary)", fontSize: "0.8rem" }}>
+                        {mainStrategy}
+                      </span>
+                      <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
+                        Generated on {dateStr}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           )}
 
           <ParameterForm onSubmit={handleFormSubmit} />

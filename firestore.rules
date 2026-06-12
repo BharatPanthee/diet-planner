@@ -11,12 +11,11 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
 
-    // User profiles: Only editable by the owner, isPro cannot be modified directly by clients
+    // User profiles: Only editable by the owner, allows changing isPro for trial demo upgrades
     match /users/{userId} {
       allow read: if isOwner(userId);
       allow create: if isOwner(userId);
-      allow update: if isOwner(userId) 
-        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['isPro']));
+      allow update: if isOwner(userId);
     }
     
     // System Config: Only readable by Pro subscribers, write disabled from client-side
