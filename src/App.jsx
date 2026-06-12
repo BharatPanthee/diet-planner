@@ -6,6 +6,16 @@ import MealGrid from "./components/MealGrid";
 import GroceryList from "./components/GroceryList";
 import { generateWeeklyDietPlans } from "./services/geminiService";
 import { MOCK_DIET_PLANS } from "./services/mockDietData";
+import { auth, googleProvider } from "./services/firebase";
+import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
+import {
+  getUserProfile,
+  createUserProfileIfNew,
+  updateUserSubscription,
+  incrementWeeklyUsage,
+  saveGeneratedPlan,
+  getDeveloperApiKey
+} from "./services/dbService";
 
 export default function App() {
   const [theme, setTheme] = useState("dark");
@@ -44,16 +54,50 @@ export default function App() {
 
     const savedAccessMode = localStorage.getItem("auradiet_access_mode") || "pro";
     setAccessMode(savedAccessMode);
+  }, []);
 
-    const savedAuth = localStorage.getItem("auradiet_user_auth");
-    if (savedAuth) {
-      setUserAuth(JSON.parse(savedAuth));
-    }
+  // Listen to Firebase Auth state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userInfo = {
+          uid: user.uid,
+          name: user.displayName || "AuraDiet User",
+          email: user.email,
+          avatar: user.photoURL || "https://lh3.googleusercontent.com/a/default-user=s96-c"
+        };
+        setUserAuth(userInfo);
+        localStorage.setItem("auradiet_user_auth", JSON.stringify(userInfo));
 
-    const savedMembership = localStorage.getItem("auradiet_membership");
-    if (savedMembership) {
-      setMembership(JSON.parse(savedMembership));
-    }
+        try {
+          // Retrieve or initialize user profile in Firestore
+          const profile = await createUserProfileIfNew(user.uid, user);
+          const membershipInfo = {
+            isPro: profile.isPro,
+            generationsUsedThisWeek: profile.generationsUsedThisWeek,
+            generationsLimitPerWeek: profile.generationsLimitPerWeek,
+            weekResetDate: new Date(new Date(profile.weekStartedAt).getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString()
+          };
+          setMembership(membershipInfo);
+          localStorage.setItem("auradiet_membership", JSON.stringify(membershipInfo));
+        } catch (err) {
+          console.error("Failed to load Firebase user profile:", err);
+        }
+      } else {
+        setUserAuth(null);
+        localStorage.removeItem("auradiet_user_auth");
+        const resetMem = {
+          isPro: false,
+          generationsUsedThisWeek: 0,
+          generationsLimitPerWeek: 4,
+          weekResetDate: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000).toLocaleDateString()
+        };
+        setMembership(resetMem);
+        localStorage.setItem("auradiet_membership", JSON.stringify(resetMem));
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const calculateCost = (model, usage) => {
@@ -117,39 +161,47 @@ export default function App() {
     setUsageStats(null);
   };
 
-  // Auth Mocks
-  const handleSignIn = () => {
-    const mockAuth = {
-      name: "Bharat Panthee",
-      email: "bharat@example.com",
-      avatar: "https://lh3.googleusercontent.com/a/default-user=s96-c"
-    };
-    setUserAuth(mockAuth);
-    localStorage.setItem("auradiet_user_auth", JSON.stringify(mockAuth));
+  // Google Authentication trigger
+  const handleSignIn = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (err) {
+      console.error(err);
+      alert(`Sign in failed: ${err.message}`);
+    }
   };
 
-  const handleSignOut = () => {
-    setUserAuth(null);
-    localStorage.removeItem("auradiet_user_auth");
-    const resetMem = {
-      isPro: false,
-      generationsUsedThisWeek: 0,
-      generationsLimitPerWeek: 4,
-      weekResetDate: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000).toLocaleDateString()
-    };
-    setMembership(resetMem);
-    localStorage.setItem("auradiet_membership", JSON.stringify(resetMem));
+  // Sign out trigger
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+    } catch (err) {
+      console.error(err);
+      alert(`Sign out failed: ${err.message}`);
+    }
   };
 
-  const handleUpgrade = () => {
-    const upgradedMem = {
-      ...membership,
-      isPro: true,
-      generationsUsedThisWeek: 0
-    };
-    setMembership(upgradedMem);
-    localStorage.setItem("auradiet_membership", JSON.stringify(upgradedMem));
-    setShowPaywall(false);
+  // Upgrade to Pro trigger
+  const handleUpgrade = async () => {
+    if (!userAuth) return;
+    try {
+      await updateUserSubscription(userAuth.uid, true);
+      // Retrieve updated profile settings
+      const profile = await getUserProfile(userAuth.uid);
+      const membershipInfo = {
+        isPro: profile.isPro,
+        generationsUsedThisWeek: profile.generationsUsedThisWeek,
+        generationsLimitPerWeek: profile.generationsLimitPerWeek,
+        weekResetDate: new Date(new Date(profile.weekStartedAt).getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString()
+      };
+      setMembership(membershipInfo);
+      localStorage.setItem("auradiet_membership", JSON.stringify(membershipInfo));
+      setShowPaywall(false);
+      alert("🎉 Success! You have upgraded to AuraDiet Pro. Premium server keys are now active!");
+    } catch (err) {
+      console.error(err);
+      alert(`Upgrade failed: ${err.message}`);
+    }
   };
 
   const handleToggleAccessMode = (mode) => {
@@ -189,12 +241,78 @@ export default function App() {
     setUsageStats(null);
 
     try {
-      if (accessMode === "byok" || (accessMode === "pro" && apiKey)) {
-        // Run live API call (Pro mode runs through the user key if saved locally in this prototype)
-        const activeKey = accessMode === "byok" ? apiKey : apiKey;
-        const activeModel = accessMode === "byok" ? selectedModel : "gemini-2.5-flash";
+      if (accessMode === "byok") {
+        // BYOK mode: run live API call directly with user's key
+        const result = await generateWeeklyDietPlans(apiKey, params, selectedModel);
+        if (result && result.strategies && result.strategies.length > 0) {
+          setStrategies(result.strategies);
+          setActiveStrategyId(result.strategies[0].id);
+          
+          if (result.usageMetadata) {
+            setUsageStats({
+              model: selectedModel,
+              promptTokens: result.usageMetadata.promptTokenCount,
+              candidatesTokens: result.usageMetadata.candidatesTokenCount,
+              totalTokens: result.usageMetadata.totalTokenCount,
+              cost: calculateCost(selectedModel, result.usageMetadata),
+              isProBadge: false
+            });
+          }
+          setLoading(false);
+        } else {
+          throw new Error("Invalid output received from Gemini API.");
+        }
+      } else {
+        // Pro Mode: Retrieve developer key from system/config
+        let developerKey = null;
+        let isOfflineFallback = false;
+        
+        try {
+          developerKey = await getDeveloperApiKey();
+        } catch (err) {
+          // If Firestore read fails (e.g. key document system/config not setup yet), fallback to offline trial
+          console.warn("Developer key config not found on Firestore. Running in Offline Mock Trial.", err.message);
+          isOfflineFallback = true;
+        }
 
-        const result = await generateWeeklyDietPlans(activeKey, params, activeModel);
+        if (isOfflineFallback || !developerKey) {
+          // Simulate offline generator delay
+          setTimeout(async () => {
+            setStrategies(MOCK_DIET_PLANS.strategies);
+            setActiveStrategyId(MOCK_DIET_PLANS.strategies[0].id);
+            setUsageStats({
+              model: "Gemini Server Key (AuraDiet Pro - Offline Fallback)",
+              promptTokens: MOCK_DIET_PLANS.usageMetadata.promptTokenCount,
+              candidatesTokens: MOCK_DIET_PLANS.usageMetadata.candidatesTokenCount,
+              totalTokens: MOCK_DIET_PLANS.usageMetadata.totalTokenCount,
+              cost: "0.00000",
+              isProBadge: true
+            });
+
+            // Increment usage and save plan to DB
+            const weekStartISO = new Date(new Date(membership.weekResetDate).getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
+            const updatedProfile = await incrementWeeklyUsage(userAuth.uid, {
+              ...membership,
+              weekStartedAt: weekStartISO
+            });
+            const membershipInfo = {
+              isPro: updatedProfile.isPro,
+              generationsUsedThisWeek: updatedProfile.generationsUsedThisWeek,
+              generationsLimitPerWeek: updatedProfile.generationsLimitPerWeek,
+              weekResetDate: new Date(new Date(updatedProfile.weekStartedAt).getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString()
+            };
+            setMembership(membershipInfo);
+            localStorage.setItem("auradiet_membership", JSON.stringify(membershipInfo));
+            
+            await saveGeneratedPlan(userAuth.uid, MOCK_DIET_PLANS);
+            setLoading(false);
+          }, 2500);
+          return;
+        }
+
+        // Live Pro Generation using Developer Server Key
+        const activeModel = "gemini-2.5-flash";
+        const result = await generateWeeklyDietPlans(developerKey, params, activeModel);
         if (result && result.strategies && result.strategies.length > 0) {
           setStrategies(result.strategies);
           setActiveStrategyId(result.strategies[0].id);
@@ -205,43 +323,31 @@ export default function App() {
               promptTokens: result.usageMetadata.promptTokenCount,
               candidatesTokens: result.usageMetadata.candidatesTokenCount,
               totalTokens: result.usageMetadata.totalTokenCount,
-              cost: calculateCost(activeModel, result.usageMetadata),
-              isProBadge: accessMode === "pro"
+              cost: "0.00000", // Subscription handles it
+              isProBadge: true
             });
           }
 
-          // If in Pro mode, increment the generation count
-          if (accessMode === "pro") {
-            const nextUsed = membership.generationsUsedThisWeek + 1;
-            const updatedMem = { ...membership, generationsUsedThisWeek: nextUsed };
-            setMembership(updatedMem);
-            localStorage.setItem("auradiet_membership", JSON.stringify(updatedMem));
-          }
-
+          // Increment usage and save plan to DB
+          const weekStartISO = new Date(new Date(membership.weekResetDate).getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
+          const updatedProfile = await incrementWeeklyUsage(userAuth.uid, {
+            ...membership,
+            weekStartedAt: weekStartISO
+          });
+          const membershipInfo = {
+            isPro: updatedProfile.isPro,
+            generationsUsedThisWeek: updatedProfile.generationsUsedThisWeek,
+            generationsLimitPerWeek: updatedProfile.generationsLimitPerWeek,
+            weekResetDate: new Date(new Date(updatedProfile.weekStartedAt).getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString()
+          };
+          setMembership(membershipInfo);
+          localStorage.setItem("auradiet_membership", JSON.stringify(membershipInfo));
+          
+          await saveGeneratedPlan(userAuth.uid, result);
           setLoading(false);
         } else {
           throw new Error("Invalid output received from Gemini API.");
         }
-      } else {
-        // Pro Mode simulation with offline mock data (No API key required)
-        setTimeout(() => {
-          setStrategies(MOCK_DIET_PLANS.strategies);
-          setActiveStrategyId(MOCK_DIET_PLANS.strategies[0].id);
-          setUsageStats({
-            model: "Gemini Server Key (AuraDiet Pro)",
-            promptTokens: MOCK_DIET_PLANS.usageMetadata.promptTokenCount,
-            candidatesTokens: MOCK_DIET_PLANS.usageMetadata.candidatesTokenCount,
-            totalTokens: MOCK_DIET_PLANS.usageMetadata.totalTokenCount,
-            cost: "0.00000", // Free for subscription users
-            isProBadge: true
-          });
-
-          const nextUsed = membership.generationsUsedThisWeek + 1;
-          const updatedMem = { ...membership, generationsUsedThisWeek: nextUsed };
-          setMembership(updatedMem);
-          localStorage.setItem("auradiet_membership", JSON.stringify(updatedMem));
-          setLoading(false);
-        }, 2500); // Realistic network delay
       }
     } catch (err) {
       console.error(err);
@@ -332,7 +438,7 @@ export default function App() {
                 </p>
               )}
               {accessMode === "pro" && !userAuth && (
-                <p className="welcome-warning-api" style={{ borderColor: "var(--accent)", color: "var(--accent)" }}>
+                <p className="welcome-warning-api" style={{ borderColor: "var(--accent-primary)", color: "var(--accent-primary)" }}>
                   🌟 Pro Mode Selected: Sign in to your account under the <strong>Access Options</strong> panel to generate your plans using AuraDiet server keys!
                 </p>
               )}
@@ -394,7 +500,7 @@ export default function App() {
                   marginBottom: "1.25rem",
                   padding: "0.75rem 1rem",
                   fontSize: "0.85rem",
-                  borderLeft: usageStats.isProBadge ? "4px solid #10b981" : "4px solid var(--accent)",
+                  borderLeft: usageStats.isProBadge ? "4px solid #10b981" : "4px solid var(--accent-primary)",
                   display: "flex",
                   flexWrap: "wrap",
                   gap: "0.5rem",
@@ -407,7 +513,7 @@ export default function App() {
                   {usageStats.isProBadge ? (
                     <span style={{ color: "#34d399", fontWeight: "bold" }}>🌟 AuraDiet Pro Subscription (Generations remaining: {membership.generationsLimitPerWeek - membership.generationsUsedThisWeek})</span>
                   ) : (
-                    <span>💰 <strong>Estimated Cost:</strong> <span className="cost-value" style={{ color: "var(--accent)", fontWeight: "bold" }}>${usageStats.cost}</span></span>
+                    <span>💰 <strong>Estimated Cost:</strong> <span className="cost-value" style={{ color: "var(--accent-primary)", fontWeight: "bold" }}>${usageStats.cost}</span></span>
                   )}
                 </div>
               )}
@@ -544,7 +650,7 @@ export default function App() {
                   borderRadius: "var(--radius-sm)",
                   marginBottom: "1.5rem"
                 }}>
-                  <p style={{ margin: 0, fontSize: "0.85rem", color: "var(--accent)" }}>
+                  <p style={{ margin: 0, fontSize: "0.85rem", color: "var(--accent-primary)" }}>
                     💡 Want unlimited generations?
                   </p>
                   <p style={{ margin: "5px 0 0 0", fontSize: "0.8rem", color: "rgba(255,255,255,0.5)" }}>
@@ -565,7 +671,7 @@ export default function App() {
               </>
             ) : (
               <>
-                <h2 style={{ color: "var(--accent)", marginBottom: "0.5rem" }}>Upgrade to AuraDiet Pro</h2>
+                <h2 style={{ color: "var(--accent-primary)", marginBottom: "0.5rem" }}>Upgrade to AuraDiet Pro</h2>
                 <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.9rem", lineHeight: "1.4rem", marginBottom: "1.5rem" }}>
                   Get instant access to weekly customized diet plans using premium server keys. No configuration required!
                 </p>
