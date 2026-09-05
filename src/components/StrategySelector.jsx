@@ -2,7 +2,7 @@ import React from "react";
 
 export default function StrategySelector({ strategies, activeStrategyId, onSelect }) {
   return (
-    <div class="strategies-options-grid" id="strategies-tabs">
+    <div className="strategies-options-grid" id="strategies-tabs">
       {strategies.map((strategy, index) => {
         const isActive = strategy.id === activeStrategyId;
         return (
@@ -11,8 +11,8 @@ export default function StrategySelector({ strategies, activeStrategyId, onSelec
             className={`strategy-option-tab ${isActive ? "active" : ""}`}
             onClick={() => onSelect(strategy.id)}
           >
-            <span class="option-badge">Option {index + 1}</span>
-            <span class="option-name">{strategy.name}</span>
+            <span className="option-badge">Option {index + 1}</span>
+            <span className="option-name">{strategy.name}</span>
           </button>
         );
       })}

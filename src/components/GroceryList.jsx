@@ -21,22 +21,22 @@ export default function GroceryList({ groceryList, strategyId }) {
 
   if (!groceryList || groceryList.length === 0) {
     return (
-      <div class="glass-card grocery-list-card">
-        <p class="helper-text">No grocery items available for this plan.</p>
+      <div className="glass-card grocery-list-card">
+        <p className="helper-text">No grocery items available for this plan.</p>
       </div>
     );
   }
 
   return (
-    <div class="glass-card grocery-list-card">
-      <div class="grocery-header">
+    <div className="glass-card grocery-list-card">
+      <div className="grocery-header">
         <h3>Shopping Checklist</h3>
         <p>Check off items as you shop. Department categories have been compiled automatically.</p>
       </div>
       
-      <div class="grocery-departments-container" id="grocery-departments">
+      <div className="grocery-departments-container" id="grocery-departments">
         {groceryList.map((dept, deptIdx) => (
-          <div class="grocery-dept-section" key={dept.category || deptIdx}>
+          <div className="grocery-dept-section" key={dept.category || deptIdx}>
             <h4>{dept.category}</h4>
             {dept.items.map((item, itemIdx) => {
               const itemKey = `${dept.category}-${itemIdx}`;
@@ -51,8 +51,8 @@ export default function GroceryList({ groceryList, strategyId }) {
                     checked={isChecked}
                     onChange={() => handleCheckboxToggle(itemKey)}
                   />
-                  <span class="checkbox-box"></span>
-                  <span class="item-text">{item}</span>
+                  <span className="checkbox-box"></span>
+                  <span className="item-text">{item}</span>
                 </label>
               );
             })}

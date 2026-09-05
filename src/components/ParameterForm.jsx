@@ -77,14 +77,14 @@ export default function ParameterForm({ onSubmit }) {
   ];
 
   return (
-    <section class="glass-card main-form-card">
+    <section className="glass-card main-form-card">
       <h2>Weekly Plan Parameters</h2>
-      <p class="section-desc">Define your health profile and dietary goals below.</p>
+      <p className="section-desc">Define your health profile and dietary goals below.</p>
       
-      <form onSubmit={handleSubmit} class="custom-form">
+      <form onSubmit={handleSubmit} className="custom-form">
         {/* Age & Gender Row */}
-        <div class="form-row">
-          <div class="form-group flex-1">
+        <div className="form-row">
+          <div className="form-group flex-1">
             <label htmlFor="user-age">Age (Years) *</label>
             <input
               type="number"
@@ -96,7 +96,7 @@ export default function ParameterForm({ onSubmit }) {
               onChange={(e) => setAge(parseInt(e.target.value) || "")}
             />
           </div>
-          <div class="form-group flex-1">
+          <div className="form-group flex-1">
             <label htmlFor="user-gender">Gender *</label>
             <select
               id="user-gender"
@@ -113,8 +113,8 @@ export default function ParameterForm({ onSubmit }) {
         </div>
 
         {/* Weight & Height Row */}
-        <div class="form-row unit-toggle-container">
-          <div class="form-group flex-1">
+        <div className="form-row unit-toggle-container">
+          <div className="form-group flex-1">
             <label htmlFor="user-weight">
               Weight ({unitSystem === "imperial" ? "lbs" : "kg"}) *
             </label>
@@ -129,7 +129,7 @@ export default function ParameterForm({ onSubmit }) {
               onChange={(e) => setWeight(parseFloat(e.target.value) || "")}
             />
           </div>
-          <div class="form-group flex-1">
+          <div className="form-group flex-1">
             <label htmlFor="user-height">
               Height ({unitSystem === "imperial" ? "inches" : "cm"}) *
             </label>
@@ -146,9 +146,9 @@ export default function ParameterForm({ onSubmit }) {
         </div>
 
         {/* Unit Selector Switch */}
-        <div class="form-group inline-toggle">
-          <span class="toggle-label">System Units:</span>
-          <div class="segmented-control">
+        <div className="form-group inline-toggle">
+          <span className="toggle-label">System Units:</span>
+          <div className="segmented-control">
             <input
               type="radio"
               id="unit-metric"
@@ -171,7 +171,7 @@ export default function ParameterForm({ onSubmit }) {
         </div>
 
         {/* Activity Level */}
-        <div class="form-group">
+        <div className="form-group">
           <label htmlFor="user-activity">Daily Activity Level *</label>
           <select
             id="user-activity"
@@ -187,7 +187,7 @@ export default function ParameterForm({ onSubmit }) {
         </div>
 
         {/* Weekly Diet Goal */}
-        <div class="form-group">
+        <div className="form-group">
           <label htmlFor="user-goal">Primary Goal *</label>
           <select
             id="user-goal"
@@ -204,11 +204,11 @@ export default function ParameterForm({ onSubmit }) {
         </div>
 
         {/* Health Conditions Checkboxes */}
-        <div class="form-group">
+        <div className="form-group">
           <label>Health Conditions / Clinical Constraints</label>
-          <div class="checkbox-grid">
+          <div className="checkbox-grid">
             {healthConditionsList.map((cond) => (
-              <label class="checkbox-container" key={cond.value}>
+              <label className="checkbox-container" key={cond.value}>
                 <input
                   type="checkbox"
                   name="health-condition"
@@ -216,18 +216,18 @@ export default function ParameterForm({ onSubmit }) {
                   checked={selectedConditions.includes(cond.value)}
                   onChange={(e) => handleConditionChange(cond.value, e.target.checked)}
                 />
-                <span class="checkmark"></span> {cond.label}
+                <span className="checkmark"></span> {cond.label}
               </label>
             ))}
           </div>
         </div>
 
         {/* Dietary Restrictions Checkboxes */}
-        <div class="form-group">
+        <div className="form-group">
           <label>Dietary Restrictions / Choices</label>
-          <div class="checkbox-grid">
+          <div className="checkbox-grid">
             {dietaryRestrictionsList.map((rest) => (
-              <label class="checkbox-container" key={rest.value}>
+              <label className="checkbox-container" key={rest.value}>
                 <input
                   type="checkbox"
                   name="diet-restriction"
@@ -235,13 +235,13 @@ export default function ParameterForm({ onSubmit }) {
                   checked={selectedRestrictions.includes(rest.value)}
                   onChange={(e) => handleRestrictionChange(rest.value, e.target.checked)}
                 />
-                <span class="checkmark"></span> {rest.label}
+                <span className="checkmark"></span> {rest.label}
               </label>
             ))}
           </div>
         </div>
 
-        <button type="submit" id="generate-btn" class="btn btn-primary w-full btn-lg">
+        <button type="submit" id="generate-btn" className="btn btn-primary w-full btn-lg">
           ✨ Generate 5 Weekly Strategies
         </button>
       </form>

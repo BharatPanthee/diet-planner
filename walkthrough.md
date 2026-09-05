@@ -110,4 +110,21 @@ We built and integrated a fully interactive **hybrid monetization prototype** di
 * **Offline Mock/Pro Fallback (No-Key Instant Trial):**
   * Added a high-fidelity mock diet data module [mockDietData.js](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/services/mockDietData.js) that returns a complete, beautiful, and realistic 5-strategy plan instantly when executing in Pro mode without an active key. This allows new users to test-drive the application instantly.
 
+---
+
+## 7. React Console Warning Resolutions (`class` to `className`)
+
+During the local runtime verification, console warnings were identified regarding invalid HTML `class` properties inside JSX files. We migrated all instances of `class=` to React-standard `className=` to maintain console cleanliness and compatibility:
+
+* **Modified Components:**
+  * [MealGrid.jsx](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/components/MealGrid.jsx): Converted all occurrences of HTML class attributes to `className`.
+  * [StrategySelector.jsx](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/components/StrategySelector.jsx): Converted all option badges and button elements to use `className`.
+  * [GroceryList.jsx](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/components/GroceryList.jsx): Updated shopping checklist structures to React standards.
+  * [ParameterForm.jsx](file:///Users/bharatpanthee/.gemini/antigravity-ide/scratch/diet-planner/src/components/ParameterForm.jsx): Cleaned up form groups, grids, labels, and toggles.
+
+### Verification Results
+* **Console Logs:** Verified via the browser agent that AuraDiet loads completely error-free and warning-free.
+* **Functionality:** Theme toggling, access modal interactions, and forms perform without any issues.
+
+
 
